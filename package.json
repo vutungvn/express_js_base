@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "cross-env DOTENV_CONFIG_QUIET=true DOTENVX_LOG_LEVEL=error node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,10 +14,14 @@
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.9.1",
     "@prisma/client": "^7.9.1",
+    "cloudinary": "^1.41.3",
     "express": "^5.2.1",
+    "multer": "^2.2.0",
+    "multer-storage-cloudinary": "^4.0.0",
     "mysql2": "^3.23.2"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "prisma": "^7.9.1"
   }
 }
