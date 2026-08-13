@@ -1,0 +1,45 @@
+name: Deploy to VPS via SSH
+
+# Tự động chạy khi bạn push code lên branch main (hoặc master)
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: SSH and Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            echo "==== Bắt đầu quá trình Deploy ===="
+
+            # 1. Trỏ tới thư mục dự án trên VPS
+            cd /var/www/express_js_base
+
+            # 2. Cập nhật code mới nhất từ Git
+            git pull origin main
+
+            # 3. Cài đặt dependency
+            npm install
+
+            # 4. Build dự án (nếu dùng NestJS/React/TypeScript)
+            npm run build
+
+            # 5. Chạy Prisma Migration (nếu có dùng Prisma)
+            npx prisma migrate deploy
+
+            # 6. Restart ứng dụng bằng PM2
+            pm2 restart all
+
+            echo "==== Deploy hoàn tất thành công! ===="
